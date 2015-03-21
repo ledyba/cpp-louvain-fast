@@ -9,9 +9,9 @@
 #include <vector>
 #include <unordered_map>
 #include <random>
- #include <algorithm>
+#include <algorithm>
 #include <glog/logging.h>
- 
+
 namespace louvain {
 
 template<typename Info, typename MergeFn> class Graph;
@@ -42,6 +42,9 @@ public:
 	Info& payload() { return this->payload_; };
 	void payload( Info const& p ) { this->payload_ = p; };
 	void payload( Info&& p ) { this->payload_ = std::move(p); };
+	std::vector<int> const& children() const { return this->children_; };
+	std::vector<int>& children() { return this->children_; };
+	int parent() const {return parent_;}
 };
 
 template<typename Info, typename MergeFn>
@@ -144,7 +147,7 @@ public:
 		communities.reserve(nodes_.size()/10);
 		oldCommIdx.reserve(nodes_.size()/10);
 		for(unsigned int i=0;i<nNodes;i++){
-			Node<Info>& node = nodes_[i];
+			//Node<Info>& node = nodes_[i];
 			int const nodeTmpComm = tmpComm[i];
 			int const c = c2i[nodeTmpComm];
 			if(c <= 0){
