@@ -22,12 +22,12 @@ private:
 	std::vector<std::pair<int, int> > neighbors_;
 	int selfLoops_;
 	int degree_;
-	Node<Info>* parent_;
-	std::vector<Node<Info>*> children_;
+	int parent_;
+	std::vector<int> children_;
 	template<typename A, typename B> friend class Graph;
 	Info payload_;
 public:
-	Node() noexcept: neighbors_(),selfLoops_(0),degree_(0),parent_(nullptr), children_(){}
+	Node() noexcept: neighbors_(),selfLoops_(0),degree_(0),parent_(-1), children_(){}
 	Node(Node const&) = default;
 	Node(Node&&) noexcept = default;
 	Node& operator= (Node&&) noexcept = default;
@@ -151,9 +151,9 @@ public:
 				c2i[nodeTmpComm] = communities.size() + 1;
 				oldCommIdx.emplace_back(nodeTmpComm);
 				communities.emplace_back();
-				communities.back().children_.emplace_back(&node);
+				communities.back().children_.emplace_back(i);
 			}else{
-				communities[c-1].children_.emplace_back(&node);
+				communities[c-1].children_.emplace_back(i);
 			}
 		}
 		std::vector<std::unordered_map<int,int> > links(communities.size());
@@ -162,11 +162,12 @@ public:
 		for (unsigned int i=0,maxc=communities.size();i<maxc;i++) {
 			Node<Info>& comm = communities[i];
 			int const oldComm = oldCommIdx[i];
-			for (Node<Info>* const child : comm.children_) {
-				child->parent_ = &comm;
-				comm.selfLoops_ += child->selfLoops_;
-				comm.degree_ += child->selfLoops_;
-				for (std::pair<int,int> const& link : child->neighbors_){
+			for (int cidx : comm.children_) {
+				Node<Info>& child = nodes_[cidx];
+				child.parent_ = i;
+				comm.selfLoops_ += child.selfLoops_;
+				comm.degree_ += child.selfLoops_;
+				for (std::pair<int,int> const& link : child.neighbors_){
 					int const linkToIdx = link.first;
 					int const weight = link.second;
 					int const cLinkToCommNow = tmpComm[linkToIdx];
@@ -181,7 +182,7 @@ public:
 			std::unordered_map<int,int> const& link = links[i];
 			comm.neighbors_.reserve(link.size());
 			comm.neighbors_.insert(comm.neighbors_.begin(), link.begin(),link.end());
-			comm.payload_ = merge(comm.children_);
+			comm.payload_ = merge(nodes_, comm.children_);
 		}
 		return std::move(Graph(totalLinks_, std::move(communities)));
 	}
