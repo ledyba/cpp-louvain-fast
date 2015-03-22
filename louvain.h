@@ -30,7 +30,11 @@ public:
 	Node() noexcept: neighbors_(),selfLoops_(0),degree_(0),parent_(-1), children_(){}
 	Node(Node const&) = default;
 	Node(Node&&) noexcept = default;
+#ifdef __clang__
 	Node& operator= (Node&&) noexcept = default;
+#else
+	Node& operator= (Node&&) = default;
+#endif
 	Node& operator= (Node const&) = default;
 	int degree() const { return degree_; }
 	void degree(int const deg) { degree_ = deg; }
