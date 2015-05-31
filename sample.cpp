@@ -19,7 +19,7 @@ struct Person {
 
 struct Merger {
 	// It is called when the algorithm merge the nodes into the cluster.
-	Person operator()(std::vector<louvain::Node<Person> > const& nodes, std::vector<int> const& children) const{
+	Person operator()(std::vector<louvain::Node<Person> > const& nodes) const{
 		// Select the most popular person
 		louvain::Node<Person> const* most_popular = &nodes.front();
 		for(auto it = nodes.begin(); it != nodes.end(); ++it){
