@@ -189,7 +189,7 @@ public:
 			std::unordered_map<int,int> const& link = links[i];
 			comm.neighbors_.reserve(link.size());
 			comm.neighbors_.insert(comm.neighbors_.begin(), link.begin(),link.end());
-			comm.payload_ = merge(nodes_);
+			comm.payload_ = merge(nodes_, comm.children_);
 		}
 		return std::move(Graph(totalLinks_, std::move(communities)));
 	}

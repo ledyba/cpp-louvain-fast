@@ -24,16 +24,16 @@ struct Person {
 
 struct Merger {
 	// It is called when the algorithm merge the nodes into the cluster.
-	Person operator()(std::vector<louvain::Node<Person> > const& nodes) const{
+	Person operator()(std::vector<louvain::Node<Person> > const& nodes, std::vector<int> idxs) const{
 		// Select the most popular person
-		louvain::Node<Person> const* most_popular = &nodes.front();
-		for(auto it = nodes.begin(); it != nodes.end(); ++it){
-			auto next = *it;
-			if(most_popular->degree() < it->degree()){
-				most_popular = &*it;
+		louvain::Node<Person> const* most_popular = &nodes[idxs.front()];
+		for(int idx : idxs){
+			auto next = &nodes[idx];
+			if(most_popular->degree() < next->degree()){
+				most_popular = &*next;
 			}
 		}
-		return most_popular->payload();
+		return Person{most_popular->payload().id};
 	}
 };
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 	int totalLinks = 0;
 	// connect the friends
 	for(int i=0;i<100;++i){
-		persons[i].payload().id = i;
+		persons[i].payload().id = i+1;
 		int from = mt() % persons.size();
 		int to = mt() % persons.size();
 		int weight = mt() % 100;
@@ -60,13 +60,19 @@ int main(int argc, char** argv){
 	for(int i=0;i<10;++i){
 		const size_t nedges = graph.edges();
 		const size_t nnodes = graph.nodes().size();
-		std::cout << "Edges: " << nedges << " / Nodes: " << nnodes << std::endl;
+		std::cout << "[Iter "<< i <<"] Edges: " << nedges << " / Nodes: " << nnodes << std::endl;
+		size_t n = 0;
+		for(auto node : graph.nodes()){
+			std::cout << "  Cluster@"<< n << " / Leader: " << node.payload().id<<"" << std::endl;
+			++n;
+		}
 		graph = graph.nextLevel();
 		// exit if it converged
 		if( graph.edges() == nedges && graph.nodes().size() == nnodes ) {
 			break;
 		}
 	}
+	std::cout << "Done" << std::endl;
 	return 0;
 }
 ```
