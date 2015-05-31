@@ -1,6 +1,6 @@
 /* coding: utf-8 */
 /**
- * nicopp
+ * cpp-louvain-fast
  *
  * Copyright 2015, PSI
  */
@@ -82,7 +82,7 @@ public:
 				order[i] = i;
 				commTotal[i] = this->nodes_[i].degree_;
 			}
-			
+
 			std::vector<int> neighLinks(nNodes, 0);
 
 			std::vector<int> neighComm;

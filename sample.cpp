@@ -1,14 +1,9 @@
-# The Louvain method for community detection in large networks
-
-Implementation of [Louvain method](https://perso.uclouvain.be/vincent.blondel/research/louvain.html) in C++.
-
-# How to
-
-Copy louvain.h to your project. 
-
-Here is the sample code:
-
-```cpp
+/* coding: utf-8 */
+/**
+ * cpp-louvain-fast
+ *
+ * Copyright 2015, PSI
+ */
 #include "louvain.h"
 #include <vector>
 #include <iostream>
@@ -61,11 +56,3 @@ int main(int argc, char** argv){
 	}
 	return 0;
 }
-```
-
-# Reference
-
-Fast unfolding of communities in large networks,   
-Vincent D Blondel, Jean-Loup Guillaume, Renaud Lambiotte, Etienne Lefebvre,   
-Journal of Statistical Mechanics: Theory and Experiment 2008 (10), P10008 (12pp)  
-doi: [10.1088/1742-5468/2008/10/P10008](http://dx.doi.org/10.1088%2F1742-5468%2F2008%2F10%2FP10008). ArXiv: [http://arxiv.org/abs/0803.0476](http://arxiv.org/abs/0803.0476)
