@@ -9,16 +9,23 @@ Copy louvain.h to your project.
 Here is the sample code:
 
 ```cpp
+// sample.
+// This program creates the dummy friendship graph
+// and then, clustering by this library.
+
 #include "louvain.h"
 #include <vector>
 #include <iostream>
 
+// Data structure that stick to each node.
 struct Person {
 	int id;
 };
 
 struct Merger {
+	// It is called when the algorithm merge the nodes into the cluster.
 	Person operator()(std::vector<louvain::Node<Person> > const& nodes, std::vector<int> const& children) const{
+		// Select the most popular person
 		louvain::Node<Person> const* most_popular = &nodes.front();
 		for(auto it = nodes.begin(); it != nodes.end(); ++it){
 			auto next = *it;
@@ -55,6 +62,7 @@ int main(int argc, char** argv){
 		const size_t nnodes = graph.nodes().size();
 		std::cout << "Edges: " << nedges << " / Nodes: " << nnodes << std::endl;
 		graph = graph.nextLevel();
+		// exit if it converged
 		if( graph.edges() == nedges && graph.nodes().size() == nnodes ) {
 			break;
 		}
